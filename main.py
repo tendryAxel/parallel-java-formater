@@ -7,7 +7,12 @@ import os
 import git
 import threaded
 
-# threaded.ThreadPooled.configure(max_workers=8)
+def cpu_count() -> int:
+    print("Pool Size: ", end="")
+    print(pool_size_count := os.cpu_count() * 2)
+    return pool_size_count
+
+threaded.ThreadPooled.configure(max_workers=cpu_count())
 
 def finalization(thread_list: list[Thread]):
     return [f.join() for f in thread_list]
@@ -27,7 +32,7 @@ def java_format_file_list(path_files: list[str]):
     return futures.wait(_java_format_file(f) for f in path_files)
 
 def java_format_folder(path_folder: str):
-    return java_format_file_list(glob.glob(f"{path_folder}/**", recursive=True))
+    return java_format_file_list(glob.glob(f"{path_folder}/**/*.java", recursive=True))
 
 def java_format_git_change(path_folder: str):
     try:
