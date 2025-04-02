@@ -1,5 +1,4 @@
 from concurrent import futures
-from threading import Thread
 from termcolor import colored
 
 import glob
@@ -13,14 +12,6 @@ def cpu_count() -> int:
     return pool_size_count
 
 threaded.ThreadPooled.configure(max_workers=cpu_count())
-
-def finalization(thread_list: list[Thread]):
-    return [f.join() for f in thread_list]
-
-def finalize_annotation(func):
-    def wrapper(*args, **kwargs):
-        return finalization(func(*args, **kwargs))
-    return wrapper
 
 
 @threaded.ThreadPooled
