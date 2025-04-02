@@ -1,10 +1,15 @@
+from concurrent import futures
+from threading import Thread
+from termcolor import colored
+
 import glob
 import os
-from termcolor import colored
 import git
-import threading
+import threaded
 
-def finalization(thread_list: list[threading.Thread]):
+# threaded.ThreadPooled.configure(max_workers=8)
+
+def finalization(thread_list: list[Thread]):
     return [f.join() for f in thread_list]
 
 def finalize_annotation(func):
@@ -12,24 +17,18 @@ def finalize_annotation(func):
         return finalization(func(*args, **kwargs))
     return wrapper
 
+
+@threaded.ThreadPooled
 def _java_format_file(path_file: str):
-    print(f"{colored('Formatted', 'green')}: {path_file}")
+    print(f"{colored('Start format', 'green')}: {path_file}")
     os.system(f"java -jar google-java-format-1.23.0-all-deps.jar --replace {path_file}")
 
-def java_format_file(path_file: str):
-    t = threading.Thread(target=_java_format_file, args=(path_file,))
-    t.start()
-    print(f"{colored('Start thread', 'blue')} {t.name}")
-    return t
-
 def java_format_file_list(path_files: list[str]):
-    return [java_format_file(f) for f in path_files]
+    return futures.wait(_java_format_file(f) for f in path_files)
 
-@finalize_annotation
 def java_format_folder(path_folder: str):
     return java_format_file_list(glob.glob(f"{path_folder}/**", recursive=True))
 
-@finalize_annotation
 def java_format_git_change(path_folder: str):
     try:
         repo = git.Repo(path_folder)
