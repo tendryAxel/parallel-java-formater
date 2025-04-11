@@ -1,0 +1,11 @@
+[project]
+name = "parallel-java-formater"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "gitpython>=3.1.44",
+    "termcolor>=3.0.1",
+    "threaded>=4.2.0",
+]
