@@ -1,3 +1,4 @@
+import sys
 from concurrent import futures
 from termcolor import colored
 
@@ -33,6 +34,7 @@ def java_format_git_change(path_folder: str):
         print(f"{colored('InvalidGitRepositoryError', 'red')}: {path_folder}")
 
 _help = '''
+Can be use as list => python main.py [FOLDER_NAME]
 h help
 g git local repo change
 d directory
@@ -43,6 +45,24 @@ def ask_folder():
     return input("Path folder: ")
 
 if __name__ == '__main__':
+    given_folder = sys.argv[1]
+    if given_folder is not None:
+        try:
+            git.Repo(given_folder)
+            print(colored("XD Git repository detected", "green", attrs=["bold"]))
+            java_format_git_change(given_folder)
+            sys.exit()
+        except git.exc.InvalidGitRepositoryError:
+            print(colored(";X no Git repository detected", "red", attrs=["bold"]))
+            java_format_folder(given_folder)
+            sys.exit()
+        except Exception as e:
+            print("Unknow Exception: ", e)
+        try:
+            java_format_file_list([given_folder])
+            sys.exit()
+        except Exception as e:
+            print("Unknow Exception: ", e)
     alors = input("Action: ")
     match alors:
         case "g":
