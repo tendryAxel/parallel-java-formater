@@ -9,3 +9,5 @@ dependencies = [
     "termcolor>=3.0.1",
     "threaded>=4.2.0",
 ]
+[project.scripts]
+parallel-java-formater = "parallel-java-formater.cli:main"

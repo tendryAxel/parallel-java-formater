@@ -34,7 +34,7 @@ def java_format_git_change(path_folder: str):
         print(f"{colored('InvalidGitRepositoryError', 'red')}: {path_folder}")
 
 _help = '''
-Can be use as list => python main.py [FOLDER_NAME]
+Can be use as list => python cli.py [FOLDER_NAME]
 h help
 g git local repo change
 d directory
@@ -44,7 +44,8 @@ f file
 def ask_folder():
     return input("Path folder: ")
 
-if __name__ == '__main__':
+
+def main():
     given_folder = sys.argv[1]
     if given_folder is not None:
         try:
@@ -75,3 +76,7 @@ if __name__ == '__main__':
             print(_help)
         case _:
             print(_help)
+
+
+if __name__ == '__main__':
+    main()
